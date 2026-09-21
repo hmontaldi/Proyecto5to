@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosco Informático</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #111827, #1e3a8a);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenedor {
+    width: 95%;
+    max-width: 900px;
+    text-align: center;
+}
+
+h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    margin: 10px 0;
+}
+
+.subtitulo {
+    color: #cbd5e1;
+    margin-bottom: 15px;
+}
+
+.panel {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 20px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.estado {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.estado div {
+    background: #0f172a;
+    padding: 10px 18px;
+    border-radius: 12px;
+    min-width: 110px;
+}
+
+.valor {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#rosco {
+    position: relative;
+    width: min(80vw, 600px);
+    height: min(80vw, 600px);
+    margin: 20px auto;
+}
+
+.letra {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: 3px solid #64748b;
+    transition: .3s;
+}
+
+.letra.actual {
+    background: #facc15;
+    color: #111827;
+    border-color: white;
+    transform: scale(1.2);
+}
+
+.letra.correcta {
+    background: #16a34a;
+    border-color: #4ade80;
+}
+
+.letra.incorrecta {
+    background: #dc2626;
+    border-color: #f87171;
+}
+
+.letra.pasada {
+    background: #64748b;
+}
+
+.pregunta {
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    line-height: 1.4;
+    margin: 20px auto;
+    max-width: 700px;
+    min-height: 80px;
+}
+
+#respuesta {
+    width: 90%;
+    max-width: 500px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    outline: none;
+    text-align: center;
+}
+
+.botones {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    padding: 13px 22px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+.btn-correcto {
+    background: #22c55e;
+    color: white;
+}
+
+.btn-pasar {
+    background: #facc15;
+    color: #111827;
+}
+
+.btn-iniciar {
+    background: #38bdf8;
+    color: #082f49;
+}
+
+.btn-reiniciar {
+    background: #a855f7;
+    color: white;
+}
+
+#mensaje {
+    min-height: 30px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+#pantallaInicio,
+#pantallaFinal {
+    text-align: center;
+}
+
+.oculto {
+    display: none;
+}
+
+.resultado {
+    font-size: 2rem;
+    margin: 20px;
+}
+
+.explicacion {
+    color: #cbd5e1;
+}
+
+@media (max-width: 500px) {
+    .panel {
+        padding: 12px;
+    }
+
+    .letra {
+        width: 36px;
+        height: 36px;
+        font-size: .9rem;
+    }
+
+    #rosco {
+        width: 90vw;
+        height: 90vw;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <!-- INICIO -->
+    <div id="pantallaInicio" class="panel">
+
+        <h1>🎯 ROSCO INFORMÁTICO</h1>
+
+        <p class="subtitulo">
+            Poné a prueba tus conocimientos de informática.
+        </p>
+
+        <p>
+            Leé la pista, escribí la respuesta y comprobá si acertaste.
+            Si no sabés una respuesta, podés pasar y volver después.
+        </p>
+
+        <button class="btn-iniciar" onclick="iniciarJuego()">
+            🚀 COMENZAR
+        </button>
+
+    </div>
+
+
+    <!-- JUEGO -->
+    <div id="pantallaJuego" class="panel oculto">
+
+        <h1>🎯 ROSCO</h1>
+
+        <div class="estado">
+
+            <div>
+                <div>⏱️ Tiempo</div>
+                <div id="tiempo" class="valor">120</div>
+            </div>
+
+            <div>
+                <div>⭐ Puntaje</div>
+                <div id="puntaje" class="valor">0</div>
+            </div>
+
+            <div>
+                <div>❌ Errores</div>
+                <div id="errores" class="valor">0</div>
+            </div>
+
+        </div>
+
+        <div id="rosco"></div>
+
+        <div id="pregunta" class="pregunta"></div>
+
+        <input
+            id="respuesta"
+            type="text"
+            placeholder="Escribí tu respuesta..."
+            autocomplete="off"
+        >
+
+        <div class="botones">
+
+            <button
+                class="btn-correcto"
+                onclick="comprobarRespuesta()">
+                ✅ RESPONDER
+            </button>
+
+            <button
+                class="btn-pasar"
+                onclick="pasar()">
+                ⏭️ PASAPALABRA
+            </button>
+
+        </div>
+
+        <div id="mensaje"></div>
+
+    </div>
+
+
+    <!-- FINAL -->
+    <div id="pantallaFinal" class="panel oculto">
+
+        <h1>🏆 ¡ROSCO TERMINADO!</h1>
+
+        <div class="resultado">
+            Puntaje: <strong id="resultadoPuntaje">0</strong>
+        </div>
+
+        <p id="resultadoTexto"></p>
+
+        <button
+            class="btn-reiniciar"
+            onclick="location.reload()">
+            🔄 JUGAR NUEVAMENTE
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const preguntas = {
+
+"A": {
+    pregunta: "Con la A: lenguaje de programación utilizado para crear aplicaciones y páginas web.",
+    respuesta: ["javascript"]
+},
+
+"B": {
+    pregunta: "Con la B: sistema de numeración que utiliza solamente 0 y 1.",
+    respuesta: ["binario"]
+},
+
+"C": {
+    pregunta: "Con la C: conjunto de instrucciones que una computadora puede ejecutar.",
+    respuesta: ["codigo", "código"]
+},
+
+"D": {
+    pregunta: "Con la D: información almacenada en una computadora.",
+    respuesta: ["dato", "datos"]
+},
+
+"E": {
+    pregunta: "Con la E: elemento HTML utilizado para crear enlaces.",
+    respuesta: ["a", "enlace", "link"]
+},
+
+"F": {
+    pregunta: "Con la F: conjunto de archivos y programas necesarios para que una computadora funcione.",
+    respuesta: ["firmware"]
+},
+
+"G": {
+    pregunta: "Con la G: representación visual de información mediante barras, líneas o sectores.",
+    respuesta: ["grafico", "gráfico"]
+},
+
+"H": {
+    pregunta: "Con la H: lenguaje utilizado para estructurar páginas web.",
+    respuesta: ["html"]
+},
+
+"I": {
+    pregunta: "Con la I: red mundial que conecta millones de dispositivos.",
+    respuesta: ["internet"]
+},
+
+"J": {
+    pregunta: "Con la J: lenguaje de programación utilizado para agregar interactividad a páginas web.",
+    respuesta: ["javascript"]
+},
+
+"K": {
+    pregunta: "Con la K: unidad de almacenamiento equivalente aproximadamente a mil bytes.",
+    respuesta: ["kilobyte", "kilobytes"]
+},
+
+"L": {
+    pregunta: "Con la L: sistema operativo de código abierto muy utilizado en servidores.",
+    respuesta: ["linux"]
+},
+
+"M": {
+    pregunta: "Con la M: dispositivo utilizado para mover el cursor.",
+    respuesta: ["mouse"]
+},
+
+"N": {
+    pregunta: "Con la N: conjunto de computadoras conectadas entre sí.",
+    respuesta: ["red", "network"]
+},
+
+"O": {
+    pregunta: "Con la O: sistema que administra los recursos de una computadora.",
+    respuesta: ["sistema operativo", "operativo"]
+},
+
+"P": {
+    pregunta: "Con la P: conjunto de instrucciones que realizan una tarea.",
+    respuesta: ["programa"]
+},
+
+"Q": {
+    pregunta: "Con la Q: código que permite acceder rápidamente a información mediante un teléfono.",
+    respuesta: ["qr", "codigo qr", "código qr"]
+},
+
+"R": {
+    pregunta: "Con la R: memoria que almacena temporalmente información mientras la computadora trabaja.",
+    respuesta: ["ram"]
+},
+
+"S": {
+    pregunta: "Con la S: conjunto de componentes que trabajan juntos para cumplir una función.",
+    respuesta: ["sistema"]
+},
+
+"T": {
+    pregunta: "Con la T: tecnología que permite transmitir información a distancia.",
+    respuesta: ["telecomunicacion", "telecomunicación"]
+},
+
+"U": {
+    pregunta: "Con la U: persona que utiliza un sistema informático.",
+    respuesta: ["usuario"]
+},
+
+"V": {
+    pregunta: "Con la V: programa que detecta y elimina software malicioso.",
+    respuesta: ["antivirus"]
+},
+
+"W": {
+    pregunta: "Con la W: sistema de páginas y recursos accesibles mediante Internet.",
+    respuesta: ["web", "world wide web"]
+},
+
+"X": {
+    pregunta: "Con la X: formato utilizado frecuentemente para imágenes con transparencia.",
+    respuesta: ["png"]
+},
+
+"Y": {
+    pregunta: "Con la Y: plataforma de videos muy utilizada en Internet.",
+    respuesta: ["youtube"]
+},
+
+"Z": {
+    pregunta: "Con la Z: formato de archivo comprimido.",
+    respuesta: ["zip"]
+}
+
+};
+
+const letras = Object.keys(preguntas);
+
+let indice = 0;
+let puntaje = 0;
+let errores = 0;
+let respondidas = 0;
+let tiempo = 120;
+let intervalo;
+let estado = {};
+
+function iniciarJuego() {
+
+    document.getElementById("pantallaInicio")
+        .classList.add("oculto");
+
+    document.getElementById("pantallaJuego")
+        .classList.remove("oculto");
+
+    crearRosco();
+
+    letras.forEach(letra => {
+        estado[letra] = "pendiente";
+    });
+
+    mostrarPregunta();
+
+    intervalo = setInterval(() => {
+
+        tiempo--;
+
+        document.getElementById("tiempo").textContent = tiempo;
+
+        if (tiempo <= 0) {
+            terminarJuego();
+        }
+
+    }, 1000);
+}
+
+
+function crearRosco() {
+
+    const rosco = document.getElementById("rosco");
+
+    rosco.innerHTML = "";
+
+    const centro = 50;
+    const radio = 42;
+
+    letras.forEach((letra, i) => {
+
+        const elemento = document.createElement("div");
+
+        elemento.className = "letra";
+        elemento.id = "letra-" + letra;
+        elemento.textContent = letra;
+
+        const angulo =
+            (i / letras.length) * Math.PI * 2 - Math.PI / 2;
+
+        const x =
+            centro + radio * Math.cos(angulo);
+
+        const y =
+            centro + radio * Math.sin(angulo);
+
+        elemento.style.left = `calc(${x}% - 24px)`;
+        elemento.style.top = `calc(${y}% - 24px)`;
+
+        rosco.appendChild(elemento);
+
+    });
+}
+
+
+function mostrarPregunta() {
+
+    if (indice >= letras.length) {
+        buscarPendiente();
+
+        if (indice >= letras.length) {
+            terminarJuego();
+            return;
+        }
+    }
+
+    const letra = letras[indice];
+
+    document.querySelectorAll(".letra")
+        .forEach(e => e.classList.remove("actual"));
+
+    document.getElementById("letra-" + letra)
+        .classList.add("actual");
+
+    document.getElementById("pregunta")
+        .textContent = preguntas[letra].pregunta;
+
+    document.getElementById("respuesta").value = "";
+
+    document.getElementById("respuesta").focus();
+
+    document.getElementById("mensaje").textContent = "";
+}
+
+
+function normalizar(texto) {
+
+    return texto
+        .toLowerCase()
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
+
+
+function comprobarRespuesta() {
+
+    const letra = letras[indice];
+
+    const entrada =
+        normalizar(document.getElementById("respuesta").value);
+
+    if (!entrada) return;
+
+    const respuestas =
+        preguntas[letra].respuesta.map(normalizar);
+
+    if (respuestas.includes(entrada)) {
+
+        estado[letra] = "correcta";
+
+        document.getElementById("letra-" + letra)
+            .classList.remove("actual");
+
+        document.getElementById("letra-" + letra)
+            .classList.add("correcta");
+
+        puntaje += 10;
+        respondidas++;
+
+        document.getElementById("puntaje")
+            .textContent = puntaje;
+
+        document.getElementById("mensaje")
+            .textContent = "✅ ¡Correcto!";
+
+        siguiente();
+
+    } else {
+
+        estado[letra] = "incorrecta";
+
+        document.getElementById("letra-" + letra)
+            .classList.remove("actual");
+
+        document.getElementById("letra-" + letra)
+            .classList.add("incorrecta");
+
+        errores++;
+        respondidas++;
+
+        document.getElementById("errores")
+            .textContent = errores;
+
+        document.getElementById("mensaje")
+            .textContent = "❌ Incorrecto";
+
+        siguiente();
+    }
+}
+
+
+function pasar() {
+
+    const letra = letras[indice];
+
+    document.getElementById("letra-" + letra)
+        .classList.remove("actual");
+
+    document.getElementById("letra-" + letra)
+        .classList.add("pasada");
+
+    siguiente();
+}
+
+
+function siguiente() {
+
+    indice++;
+
+    buscarPendiente();
+
+    setTimeout(() => {
+
+        if (respondidas >= letras.length) {
+            terminarJuego();
+        } else {
+            mostrarPregunta();
+        }
+
+    }, 500);
+}
+
+
+function buscarPendiente() {
+
+    let intentos = 0;
+
+    while (
+        intentos < letras.length &&
+        estado[letras[indice]] !== "pendiente"
+    ) {
+
+        indice++;
+
+        if (indice >= letras.length) {
+            indice = 0;
+        }
+
+        intentos++;
+    }
+}
+
+
+function terminarJuego() {
+
+    clearInterval(intervalo);
+
+    document.getElementById("pantallaJuego")
+        .classList.add("oculto");
+
+    document.getElementById("pantallaFinal")
+        .classList.remove("oculto");
+
+    document.getElementById("resultadoPuntaje")
+        .textContent = puntaje;
+
+    let mensaje = "";
+
+    if (puntaje >= 220) {
+        mensaje = "🏆 ¡Excelente! Tenés un dominio impresionante de informática.";
+    } else if (puntaje >= 160) {
+        mensaje = "👏 ¡Muy bien! Tus conocimientos son muy buenos.";
+    } else if (puntaje >= 100) {
+        mensaje = "👍 Buen trabajo. Hay algunos conceptos que podés seguir practicando.";
+    } else {
+        mensaje = "📚 Seguí practicando. ¡La próxima ronda puede ser mucho mejor!";
+    }
+
+    document.getElementById("resultadoTexto")
+        .textContent = mensaje;
+}
+
+
+document.getElementById("respuesta")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+            comprobarRespuesta();
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
