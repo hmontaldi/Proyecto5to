@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aplicaciones HTML con fines educativos y de gestión escolar</title>
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --bg: #FFFFFF;
+    --ink: #1B2B3A;
+    --muted: #4A5A68;
+    --accent: #0F766E;
+    --on-accent: #FFFFFF;
+    --line: #CFE0DD;
+    --toast-bg: #1B2B3A;
+    --toast-ink: #FFFFFF;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Cambria, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101B21;
+      --ink: #E8EFF2;
+      --muted: #A3B5BF;
+      --accent: #4CC2B4;
+      --on-accent: #06201D;
+      --line: #2A434C;
+      --toast-bg: #E8EFF2;
+      --toast-ink: #101B21;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101B21;
+    --ink: #E8EFF2;
+    --muted: #A3B5BF;
+    --accent: #4CC2B4;
+    --on-accent: #06201D;
+    --line: #2A434C;
+    --toast-bg: #E8EFF2;
+    --toast-ink: #101B21;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *, *::before, *::after { box-sizing: inherit; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+  }
+  main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 24px 56px;
+  }
+  .school {
+    margin: 0 0 56px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+  h1 {
+    margin: 0 0 20px;
+    max-width: 16em;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(32px, 6.4vw, 52px);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+  }
+  .lead {
+    margin: 0 0 56px;
+    max-width: 34em;
+    font-size: 18px;
+    color: var(--muted);
+  }
+  section + section { margin-top: 40px; }
+  h2 {
+    margin: 0 0 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 28px;
+    min-height: 168px;
+    padding: 20px 22px;
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .tile:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .tile:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .tile svg {
+    width: 30px;
+    height: 30px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .tile .label {
+    display: block;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.15;
+  }
+  .tile .hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+    color: var(--muted);
+    transition: color .15s ease;
+  }
+  .tile:hover .hint { color: inherit; }
+  footer {
+    margin-top: 64px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  #toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100% - 32px);
+    padding: 12px 18px;
+    border-radius: 6px;
+    background: var(--toast-bg);
+    color: var(--toast-ink);
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 8px);
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+  @media (max-width: 600px) {
+    main { padding: 28px 18px 44px; }
+    .school { margin-bottom: 36px; }
+    .lead { margin-bottom: 40px; font-size: 17px; }
+    .grid { grid-template-columns: 1fr; }
+    .tile { min-height: 132px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile, .tile .hint, #toast { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="school">Escuela N° 4-089 "José Manuel Estrada"</p>
+
+  <h1>Aplicaciones HTML con fines educativos y de gestión escolar</h1>
+  <p class="lead">Los alumnos de 5° Año de Informática desarrollan aplicaciones para que la comunidad educativa aprenda de ellas y las utilice.</p>
+
+  <section aria-labelledby="g1">
+    <h2 id="g1">Conocé el proyecto</h2>
+    <div class="grid">
+      <a class="tile" data-key="proyecto" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span><span class="label">Proyecto</span><span class="hint">Fundamentación, objetivos y etapas</span></span>
+      </a>
+      <a class="tile" data-key="presentacion" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <span><span class="label">Presentación</span><span class="hint">Resumen del proyecto para los docentes</span></span>
+      </a>
+    </div>
+  </section>
+
+  <section aria-labelledby="g2">
+    <h2 id="g2">Ejemplos de aplicaciones</h2>
+    <div class="grid">
+      <a class="tile" data-key="curso" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span><span class="label">Ejemplo de curso</span><span class="hint">Una aplicación para aprender un contenido</span></span>
+      </a>
+      <a class="tile" data-key="juego" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="4"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/></svg>
+        <span><span class="label">Ejemplo de juego</span><span class="hint">Una aplicación para jugar y aprender</span></span>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    Alumnos de 5° 3ª y 5° 4ª, orientación Informática.
+  </footer>
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  // Completá cada enlace con la dirección a la que debe llevar el botón.
+  // Los botones con la dirección vacía muestran un aviso al tocarlos.
+  const LINKS = {
+    proyecto: "",
+    presentacion: "",
+    curso: "",
+    juego: ""
+  };
+
+  const toast = document.getElementById("toast");
+  let timer;
+  function showToast(text) {
+    toast.textContent = text;
+    toast.classList.add("show");
+    clearTimeout(timer);
+    timer = setTimeout(() => toast.classList.remove("show"), 2600);
+  }
+
+  document.querySelectorAll(".tile").forEach((a) => {
+    const url = LINKS[a.dataset.key];
+    if (url) {
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener";
+    } else {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        showToast("Este botón todavía no tiene enlace.");
+      });
+    }
+  });
+</script>
+</body>
+</html>
